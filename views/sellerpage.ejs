@@ -1,0 +1,32 @@
+<% layout('layout/layout') %>
+
+<% include partials/navbar.ejs %>
+
+<main role="main" style="margin-top:80px;">
+    <div class="container">
+        <h2>Products</h2>
+        <br>
+        <div class="container row" id="productDIV">
+            <% Object.keys(sellerdata).forEach(function(i) { %>
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img class="card-img-top" style="height:16rem;" src="<%= sellerdata[i].imgloc %>"
+                        alt="Card image cap">
+                    <div class="card-body d-flex ">
+                        <div>
+                            <p class="card-text font-weight-bold text-capitalize"><%= sellerdata[i].name %></p>
+                            <p class="card-text">Price: <i class="fa fa-inr"></i><%= sellerdata[i].price %>.00</p>
+                        </div>
+                        <div id="deleteItem" class="d-flex col-xs-6 col-sm-6 float-right"
+                            onClick="deleteItem('<%= sellerdata[i]._id %>')">
+                            <i class="text-danger fa fa-trash" style="font-size: 200%;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+</main>
+
+<script src="/js/sellerpage-js.js"></script>
