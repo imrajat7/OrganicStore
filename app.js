@@ -62,6 +62,10 @@ app.use(flash());
 /* Middleware */
 var middleware = require("./middleware/middleware");
 
+/* Routing Implementation */
+app.use("/user", require("./routes/Users"));
+
+
 app.get("/", function (req, res) {
   var err_msg = req.flash("errors")[0]
   if (req.isAuthenticated()) {
