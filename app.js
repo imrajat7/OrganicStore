@@ -64,7 +64,10 @@ var middleware = require("./middleware/middleware");
 
 /* Routing Implementation */
 app.use("/user", require("./routes/Users"));
+// app.use("/products", require("./routes/Products"));
 
+/* Models */
+var Product = require("./models/products")
 
 app.get("/", function (req, res) {
   var err_msg = req.flash("errors")[0]
@@ -78,6 +81,66 @@ app.get("/", function (req, res) {
   });
 });
 
+app.get("/register", function (req, res) {
+  res.render("register", {
+    title: "Register",
+    errors: req.flash("errors")
+  });
+});
+
+app.get("/home", middleware.checkSession, function (req, res) {
+  if (req.session.passport.user.type == "Customer")
+    res.render("home", {
+      data: req.session.passport.user,
+      shownavpro: "true",
+      title: "Home",
+      success: req.flash("success"),
+      errors: req.flash("errors")
+    });
+  else if (req.session.passport.user.type == "Seller")
+    Product.find({
+      sellercompany: req.session.passport.user.name
+    }).then(result => {
+      res.render("sellerpage", {
+        data: req.session.passport.user,
+        shownavpro: "false",
+        title: "Home",
+        sellerdata: result,
+        success: req.flash("success")
+      })
+    }).catch(err => {
+      throw new Error('Error while fetching Seller Data for Seller Page')
+    })
+  else if (req.session.passport.user.type == "Admin")
+    res.render("adminpage", {
+      data: req.session.passport.user,
+      shownavpro: "false",
+      title: "Home",
+      success: req.flash("success")
+    });
+});
+
+/* GET seller's Page */
+app.get(
+  "/sellerpage",
+  middleware.checkSession,
+  middleware.checkSeller,
+  function (req, res) {
+    Product.find({
+      sellercompany: req.session.passport.user.name
+    }).then(result => {
+      res.render("sellerpage", {
+        data: req.session.passport.user,
+        shownavpro: "false",
+        title: "Home",
+        sellerdata: result,
+        success: req.flash("success")
+      })
+    }).catch(err => {
+      throw new Error('Error while fetching Seller Data for Seller Page')
+    })
+  }
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
