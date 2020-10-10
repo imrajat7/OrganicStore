@@ -64,7 +64,7 @@ var middleware = require("./middleware/middleware");
 
 /* Routing Implementation */
 app.use("/user", require("./routes/Users"));
-// app.use("/products", require("./routes/Products"));
+app.use("/products", require("./routes/Products"));
 
 /* Models */
 var Product = require("./models/products")
@@ -120,6 +120,13 @@ app.get("/home", middleware.checkSession, function (req, res) {
     });
 });
 
+app.get("/adminpage", middleware.checkSession, middleware.checkAdmin, function (req, res) {
+  res.render("adminpage", {
+    data: req.session.passport.user,
+    shownavpro: "false"
+  });
+});
+
 /* GET seller's Page */
 app.get(
   "/sellerpage",
@@ -141,6 +148,65 @@ app.get(
     })
   }
 );
+
+app.get(
+  "/adminpageUser",
+  middleware.checkSession,
+  middleware.checkAdmin,
+  function (req, res) {
+    res.render("adminpageUser", {
+      data: req.session.passport.user,
+      shownavpro: "false",
+      title: "User Data Page"
+    });
+  }
+);
+
+app.get(
+  "/adminpageProduct",
+  middleware.checkSession,
+  middleware.checkAdmin,
+  function (req, res) {
+    res.render("adminpageProduct", {
+      data: req.session.passport.user,
+      title: "Product Data Page",
+      shownavpro: "false"
+    });
+  }
+);
+
+app.get(
+  "/user/cart",
+  middleware.checkSession,
+  middleware.checkCustomer,
+  function (req, res) {
+    res.render("cartpage", {
+      data: req.session.passport.user,
+      shownavpro: "false",
+      title: "Cart Page",
+      success: req.flash("success")
+    });
+  }
+);
+
+app.get("/user/changepasswordpage", middleware.checkSession, function (
+  req,
+  res
+) {
+  res.render("changepasswordpage", {
+    data: req.session.passport.user,
+    shownavpro: "false",
+    title: "Change Password",
+    success: req.flash("success"),
+    errors: req.flash("errors")
+  });
+});
+
+app.get("/logout", middleware.checkSession, function (req, res) {
+  req.session.destroy();
+  res.render("login");
+  console.log("logouted");
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
