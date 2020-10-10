@@ -11,6 +11,10 @@ npm start or node app.js
 ### To Run Dependiences
 
 Email and Password for Online Website:<br>
+Admin :<br>
+Email :admin@gmail.com<br>
+Password: tata<br>
+
 Customer:<br>
 Email Id: user@gmail.com<br>
 Password: user<br>
