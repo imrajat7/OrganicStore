@@ -10,7 +10,7 @@ function deleteItem(id) {
                     btnClass: 'btn-success',
                     action: function () {
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", "/products/deleteproduct");
+                        xhr.open("POST", "/products/deleteproductByOwner");
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send(JSON.stringify({
                             _id: id
